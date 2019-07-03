@@ -4,7 +4,7 @@
 
 - Create folder `node_modules/cyez`
 - Copy `dist/index.js` into `node_modules/cyez`
-- Import cyez in your App.vue
+- Import cyez in App.vue
 
 ```js
 import Cyez from 'cyez'
@@ -17,3 +17,22 @@ export default {
 }
 ```
 
+### Install Dependency
+
+```bash
+npm install
+```
+
+
+### Build
+
+```bash
+npm run build
+```
+
+
+### Preview and test
+
+```bash
+npm start
+```
