@@ -5,9 +5,8 @@ import Layout from './cyez-layout'
 class Cyez {
     /**
      * 传入交互组件的容器，以及样式，构建 cyez 实例
-     * @param container {Node}
-     * @param style {object}
-     * @return cy
+     * @param container {Node} 交互组件所在的容器，用 document.getElementById 等选择器得到
+     * @param style {Object} 交互组件的样式模板
      */
     constructor(container, style) {
         console.log('Bind cytoscape to DOM ', container)
@@ -107,10 +106,10 @@ class Cyez {
 
     /**
      * 增加一个新的节点
-     * @param id {(Number | String)}
-     * @param name {String}
-     * @param type {String}
-     * @param attr {Object}
+     * @param id {(Number | String)} 节点的 id
+     * @param name {String} 节点的名称
+     * @param type {String} 节点的类型
+     * @param attr {Object} 节点的属性
      */
     addNode(id, name, type, attr) {
         this.cy.add({
@@ -122,9 +121,10 @@ class Cyez {
 
     /**
      * 在 id 为 source_id 和 id 为 target_id 的两个节点间增加关系为 name 的边
-     * @param source_id {(Number | String)}
-     * @param target_id {(Number | String)}
-     * @param name
+     * @param source_id {(Number | String)} 源节点的 id
+     * @param target_id {(Number | String)} 目标节点的 id
+     * @param name {?String} 连边的名字
+     * @public
      */
     addEdge(source_id, target_id, name) {
         this.cy.add({
@@ -134,30 +134,70 @@ class Cyez {
     }
 
     /**
+     * 删除指定的连边
+     * @param edge {cytoscape.edge} 待删除的连边
+     * @public
+     */
+    DeleteEdge(edge) {
+        edge.remove()
+    }
+
+    /**
+     * 根据 id 删除指定的连边
+     * @param id {!(String | Number)} 需要删除的边的 id
+     * @public
+     */
+    DeleteEdgeById(id) {
+        let edge = this.getEdgeById(id)
+        if (edge !== null) {
+            this.DeleteEdge(edge)
+        }
+    }
+
+    /**
+     * 根据 id 获取边的实例
+     * @param id {!(String | Number)} 需要查询的边的 id
+     * @return {?cytoscape.edge} 查询得到的边，如果没有找到对应 id 的边则返回 null
+     * @public
+     */
+    getEdgeById(id) {
+        let edge = this.cy.edges(`#${id}`)
+        if (edge.length === 0) {
+            console.warn(`没有找到 id 为 ${id} 的连边`)
+            return null
+        } else {
+            return edge
+        }
+    }
+
+    /**
      * 获取当前被选中的元素（包括节点和连边）
+     * @return {?cytoscape.element} 被选中的元素的实例
      */
     getSelectedElements() {
-        //TODO
+        return this.cy.$(':selected')
     }
 
     /**
      * 获取当前被选中的节点
+     * @return {?cytoscape.node} 被选中的节点的实例
      */
     getSelectedNodes() {
-        //TODO
+        return this.cy.$('node:selected')
     }
 
     /**
      * 获取当前被选中的连边
+     * @return {?cytoscape.edge} 被选中的连边的实例
      */
     getSelectedEdges() {
-        //TODO
+        return this.cy.$('edge:selected')
     }
 
     /**
-     * 根据节点 id 获取其
-     * @param id
-     * @return {(null | cy.node[])}
+     * 根据节点 id 获取其邻居节点
+     * @param id {!(String | Number)} 需要查找邻居的节点 id
+     * @return {?cy.node[]} 邻居节点集合，如果没有找到则返回空数组
      */
     getNeighborById(id) {
         let node = this.getNodeById(id)
@@ -173,7 +213,7 @@ class Cyez {
     /**
      * 根据节点 id 获取节点实体
      * @param id
-     * @return {(null | cy.node)}
+     * @return {?cy.node}
      */
     getNodeById(id) {
         let selector = this.$('#' + String(id))
@@ -190,7 +230,7 @@ class Cyez {
     /**
      * 根据节点 id 获取节点坐标
      * @param id
-     * @returns {null|*}
+     * @returns {Object}
      */
     getPositionById(id) {
         let node = this.getNodeById(id)
@@ -202,8 +242,90 @@ class Cyez {
         }
     }
 
+
     /**
-     * 获取所有节点
+     * 将布局算法应用与全部节点。不能在一次布局完成前进行第二次布局。
+     * @param layout {String} 指定一种布局方式，可选值有：['grid', 'circle', 'concentric', 'breadthfirst', 'cose', 'cola', 'dagre', 'elk', 'klay', 'spread']
+     * @param callback {?Function} 可选，布局完成之后将调用此函数
+     * @public
+     */
+    Layout(layout, callback) {
+        if (this.freeze) {
+            console.info('当前画布处于冻结状态')
+        } else {
+            this.freeze = true // 防止重复布局，冻结画布
+            this.cy.layout({
+                name: layout,
+                animate: true,
+                maxSimulationTime: 4000,
+                animationDuration: 1000,
+                animationEasing: 'ease-in-out',
+                stop: () => {
+                    this.freeze = false // 布局完成后解冻画布
+                    if (callback != null) {
+                        callback()
+                    }
+                }
+            }).run()
+        }
+    }
+
+
+    /**
+     * 对部分节点应用布局算法
+     * @param nodes {!cytoscape.node} 传入需要进行布局的节点
+     * @param layout {!String} 制定一种布局方式，可选值参见 {@link Layout}
+     * @param callback {?Function} 可选，布局完成后将调用此函数
+     * @public
+     */
+    LayoutNodes(nodes, layout, callback) {
+        if (this.freeze) {
+            console.info('当前画布处于冻结状态')
+        } else {
+            nodes.makeLayout({
+                name: layout,
+                fit: false,
+                animate: true,
+                maxSimulationTime: 4000,
+                animationDuration: 1000,
+                animationEasing: 'ease-in-out',
+                avoidOverlap: true,
+                stop: () => {
+                    this.freeze = false // 布局完成后解冻画布
+                    if (callback != null) {
+                        callback()
+                    }
+                }
+            }).run()
+        }
+    }
+
+
+    /**
+     * 高亮设定的节点。相当于将除了传入节点之外的其它节点和连线加上 faded class，因此需要在样式中加上 .faded{opacity:0.1} 的设定
+     * @param nodes {!cytoscape.node} 需要高亮的节点
+     * @public
+     */
+    HighlightNodes(nodes) {
+        let all_elements = this.cy.elements()
+        let n_nodes = nodes.closedNeighborhood()
+        let others = all_elements.not(nodes).not(n_nodes)
+        cy.batch(() => others.addClass('faded'))
+    }
+
+
+    /**
+     * 取消高亮节点，即将全部的节点的 faded class 都去掉
+     * @public
+     */
+    CancelHighlight() {
+        let all_elements = this.cy.elements()
+        cy.batch(() => all_elements.removeClass('faded'))
+    }
+
+
+    /**
+     * 获取所有节点的信息
      * @returns {nodes}
      */
     get nodes() {
@@ -211,7 +333,7 @@ class Cyez {
     }
 
     /**
-     * 获取所有连边
+     * 获取所有连边的信息
      * @returns {edges}
      */
     get edges() {
@@ -257,7 +379,8 @@ class Cyez {
 
     /**
      * 销毁指定 id 的右键菜单
-     * @param id
+     * @param id {!(String | Number)} 待删除的右键菜单的 id
+     *
      */
     removeContextMenu(id) {
         if (!id in this.contextmenu) {
