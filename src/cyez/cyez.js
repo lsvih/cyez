@@ -1,5 +1,6 @@
 import cytoscape from 'cytoscape'
 import cxtmenu from 'cytoscape-cxtmenu'
+import Layout from './cyez-layout'
 
 class Cyez {
     /**
@@ -12,6 +13,7 @@ class Cyez {
         console.log('Bind cytoscape to DOM ', container)
         this.cy = window.cy = cytoscape({container, style})
         console.log('Init cyez', this.cy)
+        this.layout = new Layout()
         this.init()
     }
 
@@ -25,6 +27,7 @@ class Cyez {
         this.RegisterGestures()
         this.RegisterLayout()
     }
+
 
     /**
      * 判断当前画布是否应该冻结
@@ -40,6 +43,15 @@ class Cyez {
      * @type {{}}
      */
     contextmenu = {}
+
+
+    /**
+     * Initial layout algorithms
+     * @private
+     */
+    RegisterLayout(){
+        this.layout.RegisterLayout(cytoscape)
+    }
 
     /**
      * 在画布上注册双击时间 doubleTap
@@ -92,13 +104,6 @@ class Cyez {
         })
     }
 
-    /**
-     * 注册各种布局方法
-     * @private
-     */
-    RegisterLayout() {
-
-    }
 
     /**
      * 增加一个新的节点
