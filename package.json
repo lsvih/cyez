@@ -52,7 +52,8 @@
     "cytoscape-dagre": "^2.2.2",
     "cytoscape-elk": "^1.1.10",
     "cytoscape-klay": "^3.1.2",
-    "cytoscape-spread": "^3.0.0"
+    "cytoscape-spread": "^3.0.0",
+    "file-saver": "^2.0.2"
   },
   "babel": {
     "plugins": [

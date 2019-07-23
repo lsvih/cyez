@@ -1,7 +1,7 @@
 import cytoscape from 'cytoscape'
 import cxtmenu from 'cytoscape-cxtmenu'
 import Layout from './cyez-layout'
-
+import {saveAs} from 'file-saver'
 class Cyez {
     /**
      * 传入交互组件的容器，以及样式，构建 cyez 实例
@@ -375,6 +375,15 @@ class Cyez {
                 }
             })
         })
+    }
+
+    /**
+     * 将当前图谱导出为 json 文件，并下载。
+     * @public
+     */
+    save(){
+        var blob = new Blob([JSON.stringify(this.cy.json())], {type:"text/plain;charset=utf-8"})
+        saveAs(blob, 'graph.json')
     }
 
     /**
