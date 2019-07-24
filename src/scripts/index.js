@@ -1,38 +1,9 @@
 import Cyez from '../cyez/cyez'
 import '../styles/index.scss'
 
-const pre_defined_style = {
-    'core': {
-        'active-bg-color': '#fff',
-        'active-bg-opacity': '0.333'
-    },
-    'edge': {
-        'curve-style': 'haystack',
-        'haystack-radius': 0,
-        'opacity': 0.333,
-        'width': 2,
-        'z-index': 0,
-        'overlay-opacity': 0,
-        'events': 'no'
-    },
-    'node': {
-        'width': 40,
-        'height': 40,
-        'font-size': 10,
-        'font-weight': 'bold',
-        'min-zoomed-font-size': 4,
-        'content': 'data(name)',
-        'text-valign': 'center',
-        'text-halign': 'center',
-        'color': '#ff2130',
-        'text-outline-width': 2,
-        'text-outline-color': '#fff',
-        'text-outline-opacity': 1,
-        'overlay-color': '#fff'
-    }
-}
 
 let cyez = new Cyez(document.getElementById('cy'),{})
+cyez.InitNavigator('.cytoscape-navigator-overlay')
 window.cyez = cyez
 // 增加节点与连边示例
 cyez.addNode(1, '测试1', 'test', {})

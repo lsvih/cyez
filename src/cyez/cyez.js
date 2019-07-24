@@ -1,5 +1,6 @@
 import cytoscape from 'cytoscape'
 import cxtmenu from 'cytoscape-cxtmenu'
+import navigator from 'cytoscape-navigator'
 import Layout from './cyez-layout'
 import {saveAs} from 'file-saver'
 import fileDialog from 'file-dialog'
@@ -24,6 +25,7 @@ class Cyez {
      */
     init() {
         this.RegisterContextMenu()
+        this.RegisterNavigator()
         this.RegisterDoubleClickEvent()
         this.RegisterGestures()
         this.RegisterLayout()
@@ -52,6 +54,32 @@ class Cyez {
      */
     RegisterLayout() {
         this.layout.RegisterLayout(cytoscape)
+    }
+
+    /**
+     * 注册鹰眼导航
+     * @private
+     */
+    RegisterNavigator(){
+        navigator(cytoscape)
+    }
+
+
+    /**
+     * 初始化导航组件
+     * @param {String} 传入指定的 container selector，如'.cytoscape-navigator'
+     * @public
+     */
+    InitNavigator(container){
+        this.cy.navigator({
+            container: container,
+            viewLiveFramerate: 0,
+            thumbnailEventFramerate: 30,
+            thumbnailLiveFramerate: false,
+            dblClickDelay: 200,
+            removeCustomContainer: true,
+            rerenderDelay: 100
+        })
     }
 
     /**

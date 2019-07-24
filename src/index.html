@@ -15,9 +15,6 @@
 <div class="app-container">
   <div class="contant">
     <div class="left-bar">
-      <div class="bar-item" data-toggle="tooltip" data-placement="right" title="Profile">
-        <img src="images/user.png"/>
-      </div>
       <div class="bar-item" data-toggle="tooltip" data-placement="right" title="Tooltip for this icon">
         <i class="fa fa-home"></i>
       </div>
@@ -41,24 +38,7 @@
       </div>
 
 
-      <div class="bar-item" data-toggle="tooltip" data-placement="right" title="Tooltip for this icon">
-        <i class="fa fa-eye"></i>
-      </div>
-      <div class="bar-item" data-toggle="tooltip" data-placement="right" title="Tooltip for this icon">
-        <i class="fa fa-envelope"></i>
-      </div>
-      <div class="bar-item" data-toggle="tooltip" data-placement="right" title="Tooltip for this icon">
-        <i class="fa fa-folder"></i>
-      </div>
-      <div class="bar-item" data-toggle="tooltip" data-placement="right" title="Tooltip for this icon">
-        <i class="fa fa-newspaper-o"></i>
-      </div>
-      <div class="bar-item" data-toggle="tooltip" data-placement="right" title="Tooltip for this icon">
-        <i class="fa fa-server"></i>
-      </div>
-      <div class="bar-item" data-toggle="tooltip" data-placement="right" title="Tooltip for this icon">
-        <i class="fa fa-gears"></i>
-      </div>
+
     </div>
     <div class="middle">
       <div class="middle-top-bar bottom-bar">
@@ -72,21 +52,15 @@
         <div id="graph">
           <div id="cy"></div>
         </div>
-        <div id="info">
-          <div id="information"></div>
+        <div class='cytoscape-navigator-overlay'>
+          <canvas></canvas>
+          <div class='cytoscape-navigatorView'></div>
+          <div class='cytoscape-navigatorOverlay'></div>
         </div>
       </div>
     </div>
   </div>
-  <div class="bottom-bar">
-    <div style="flex: 1 0.5 0%;">
-      <div id="fps"></div>
-    </div>
-    <div style="flex: 1 0.5 0%;">
-      <div id="status" class="text-danger"><i class="fa fa-circle"></i>&nbsp;<span>Busy</span></div>
-    </div>
-    <div style="cursor: default;" class="support-btn"><strong>ⓘ</strong> support</div>
-  </div>
+
 </div>
 </body>
 </html>

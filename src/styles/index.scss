@@ -187,3 +187,23 @@ body {
   padding: 10px;
   font-size: 12px;
 }
+
+.cytoscape-navigator-overlay {
+  position: absolute;
+  border: 1px solid #fff;
+  background: #222;
+  z-index: 99999;
+  width: 200px;
+  height: 150px;
+  bottom: 83px;
+  right: -1px;
+  overflow: hidden;
+}
+
+.cytoscape-navigatorView {
+  border: 2px solid yellow;
+  border-radius: 1px;
+  background-color: #0c78ff;
+  opacity: 0.4;
+  /* cursor: move; */
+}
