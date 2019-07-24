@@ -16,7 +16,7 @@ class Cyez {
      */
     constructor(container, style) {
         console.log('Bind cytoscape to DOM ', container)
-        this.cy = window.cy = cytoscape({container, style})
+        this.cy = cytoscape({container, style})
         console.log('Init cyez', this.cy)
         this.layout = new Layout()
         this.init()
@@ -143,9 +143,9 @@ class Cyez {
      * @private
      */
     RegisterGestures() {
-        cy.on('doubleTap', e => {
+        this.cy.on('doubleTap', e => {
             let target = e.target
-            if (e.target === cy)// double click on background
+            if (e.target === this.cy)// double click on background
                 return this.event.dbclickOnBackground()
             if (target.isNode())
                 return this.event.dbclickOnNode(target.data())
@@ -153,9 +153,9 @@ class Cyez {
                 return this.event.dbclickOnEdge(target.data())
         })
 
-        cy.on('tap', e => {
+        this.cy.on('tap', e => {
             let target = e.target
-            if (e.target === cy)// click on background
+            if (e.target === this.cy)// click on background
                 return this.event.clickOnBackground()
             if (target.isNode())
                 return this.event.clickOnNode(target.data())
@@ -371,7 +371,7 @@ class Cyez {
         let all_elements = this.cy.elements()
         let n_nodes = nodes.closedNeighborhood()
         let others = all_elements.not(nodes).not(n_nodes)
-        cy.batch(() => others.addClass('faded'))
+        this.cy.batch(() => others.addClass('faded'))
     }
 
 
@@ -381,7 +381,7 @@ class Cyez {
      */
     CancelHighlight() {
         let all_elements = this.cy.elements()
-        cy.batch(() => all_elements.removeClass('faded'))
+        this.cy.batch(() => all_elements.removeClass('faded'))
     }
 
 
@@ -427,7 +427,7 @@ class Cyez {
             console.error('content 与 func 数组长度必须一致')
             return false
         }
-        this.contextmenu[id] = cy.cxtmenu({
+        this.contextmenu[id] = this.cy.cxtmenu({
             selector: 'node',
             commands: content.map((_, i) => {
                 return {
