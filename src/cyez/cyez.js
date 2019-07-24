@@ -4,6 +4,9 @@ import navigator from 'cytoscape-navigator'
 import Layout from './cyez-layout'
 import {saveAs} from 'file-saver'
 import fileDialog from 'file-dialog'
+import panzoom from 'cytoscape-panzoom'
+
+import 'cytoscape-panzoom/cytoscape.js-panzoom.css';
 
 class Cyez {
     /**
@@ -26,6 +29,7 @@ class Cyez {
     init() {
         this.RegisterContextMenu()
         this.RegisterNavigator()
+        this.RegisterPanzoom()
         this.RegisterDoubleClickEvent()
         this.RegisterGestures()
         this.RegisterLayout()
@@ -60,8 +64,35 @@ class Cyez {
      * 注册鹰眼导航
      * @private
      */
-    RegisterNavigator(){
+    RegisterNavigator() {
         navigator(cytoscape)
+    }
+
+    /**
+     * 注册放大缩小 UI 组件
+     * @private
+     */
+    RegisterPanzoom() {
+        panzoom(cytoscape)
+        this.cy.panzoom({
+            zoomFactor: 0.1,
+            zoomDelay: 45,
+            minZoom: 0.1,
+            maxZoom: 10,
+            fitPadding: 50,
+            panSpeed: 10,
+            panDistance: 100,
+            panDragAreaSize: 75,
+            panMinPercentSpeed: 0.25,
+            panInactiveArea: 8,
+            panIndicatorMinOpacity: 0.5,
+            zoomOnly: false,
+            fitSelector: undefined,
+            animateOnFit: function () {
+                return false
+            },
+            fitAnimationDuration: 1000
+        })
     }
 
 
@@ -70,7 +101,7 @@ class Cyez {
      * @param {String} 传入指定的 container selector，如'.cytoscape-navigator'
      * @public
      */
-    InitNavigator(container){
+    InitNavigator(container) {
         this.cy.navigator({
             container: container,
             viewLiveFramerate: 0,
