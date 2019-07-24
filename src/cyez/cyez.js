@@ -2,6 +2,8 @@ import cytoscape from 'cytoscape'
 import cxtmenu from 'cytoscape-cxtmenu'
 import Layout from './cyez-layout'
 import {saveAs} from 'file-saver'
+import fileDialog from 'file-dialog'
+
 class Cyez {
     /**
      * 传入交互组件的容器，以及样式，构建 cyez 实例
@@ -381,9 +383,24 @@ class Cyez {
      * 将当前图谱导出为 json 文件，并下载。
      * @public
      */
-    save(){
-        var blob = new Blob([JSON.stringify(this.cy.json())], {type:"text/plain;charset=utf-8"})
+    save() {
+        let blob = new Blob([JSON.stringify(this.cy.json())], {type: "text/plain;charset=utf-8"})
         saveAs(blob, 'graph.json')
+    }
+
+    /**
+     * 从文件读取 json 文件，并加载到视图中
+     * @public
+     */
+    load() {
+        fileDialog({accept: 'application/json'})
+            .then(files => {
+                let reader = new FileReader()
+                reader.onload = file => {
+                    this.cy.json(JSON.parse(file.target.result))
+                }
+                reader.readAsText(files[0])
+            })
     }
 
     /**
