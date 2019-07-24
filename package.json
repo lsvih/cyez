@@ -57,7 +57,8 @@
     "cytoscape-panzoom": "^2.5.3",
     "cytoscape-spread": "^3.0.0",
     "file-dialog": "0.0.7",
-    "file-saver": "^2.0.2"
+    "file-saver": "^2.0.2",
+    "lodash": "^4.17.15"
   },
   "babel": {
     "plugins": [

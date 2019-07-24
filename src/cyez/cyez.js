@@ -6,6 +6,7 @@ import {saveAs} from 'file-saver'
 import fileDialog from 'file-dialog'
 import panzoom from 'cytoscape-panzoom'
 import b64toBlob from 'b64-to-blob'
+import {isEmpty} from 'lodash'
 
 import 'cytoscape-panzoom/cytoscape.js-panzoom.css';
 
@@ -263,6 +264,7 @@ class Cyez {
      * 根据节点 id 获取其邻居节点
      * @param id {!(String | Number)} 需要查找邻居的节点 id
      * @return {?cy.node[]} 邻居节点集合，如果没有找到则返回空数组
+     * @public
      */
     getNeighborById(id) {
         let node = this.getNodeById(id)
@@ -279,16 +281,28 @@ class Cyez {
      * 根据节点 id 获取节点实体
      * @param id
      * @return {?cy.node}
+     * @public
      */
     getNodeById(id) {
-        let selector = this.$('#' + String(id))
-        if (selector.length === 0)
+        let selector = this.cy.$(`#${id}`)
+        if (selector.length === 1)
             return selector[0]
         else if (selector.length > 1) {
             console.warn(`存在多个id为${id}的节点`)
             return selector[0]
         } else
             return null
+    }
+
+
+    /**
+     * 判断 id 是否已经存在
+     * @param id {!(String | Number)} 需要判断的 id
+     * @returns {boolean}
+     * @public
+     */
+    isIdExist(id){
+        return !isEmpty(this.getNodeById(id)) || !isEmpty(this.getEdgeById(id))
     }
 
 
