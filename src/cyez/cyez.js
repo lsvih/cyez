@@ -5,6 +5,7 @@ import Layout from './cyez-layout'
 import {saveAs} from 'file-saver'
 import fileDialog from 'file-dialog'
 import panzoom from 'cytoscape-panzoom'
+import b64toBlob from 'b64-to-blob'
 
 import 'cytoscape-panzoom/cytoscape.js-panzoom.css';
 
@@ -369,6 +370,7 @@ class Cyez {
      * 高亮设定的节点。相当于将除了传入节点之外的其它节点和连线加上 faded class，因此需要在样式中加上 .faded{opacity:0.1} 的设定
      * @param nodes {!cytoscape.node} 需要高亮的节点
      * @public
+     * TODO
      */
     HighlightNodes(nodes) {
         let all_elements = this.cy.elements()
@@ -463,6 +465,32 @@ class Cyez {
                 }
                 reader.readAsText(files[0])
             })
+    }
+
+    /**
+     * 将当前图谱导出为 jpg 图片，并下载
+     * @public
+     * @see https://github.com/iVis-at-Bilkent/pathway-mapper/blob/master/public/src/js/FileOperationsManager.js#L33
+     */
+    saveAsJPEG() {
+        let graphData = this.cy.jpeg();
+        let b64data = graphData.substr(graphData.indexOf(",") + 1);
+        let imageData = b64toBlob(b64data, "image/jpeg");
+        let blob = new Blob([imageData]);
+        saveAs(blob, "graph.jpg");
+    }
+
+    /**
+     * 将当前图谱导出为 png 图片，并下载
+     * @public
+     * @see https://github.com/iVis-at-Bilkent/pathway-mapper/blob/master/public/src/js/FileOperationsManager.js#L44
+     */
+    saveAsPNG() {
+        let graphData = this.cy.png();
+        let b64data = graphData.substr(graphData.indexOf(",") + 1);
+        let imageData = b64toBlob(b64data, "image/png");
+        let blob = new Blob([imageData]);
+        saveAs(blob, "graph.png");
     }
 
     /**

@@ -45,6 +45,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.4.0",
+    "b64-to-blob": "^1.2.19",
     "core-js": "^3.0.1",
     "cytoscape": "^3.7.3",
     "cytoscape-cola": "^2.3.0",
