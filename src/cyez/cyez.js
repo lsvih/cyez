@@ -65,7 +65,8 @@ class Cyez {
      * @private
      */
     RegisterNavigator() {
-        navigator(cytoscape)
+        if (typeof cytoscape('core', 'navigator') !== 'function')
+            navigator(cytoscape)
     }
 
     /**
@@ -73,7 +74,8 @@ class Cyez {
      * @private
      */
     RegisterPanzoom() {
-        panzoom(cytoscape)
+        if (typeof cytoscape('core', 'panzoom') !== 'function')
+            panzoom(cytoscape)
         this.cy.panzoom({
             zoomFactor: 0.1,
             zoomDelay: 45,
@@ -135,7 +137,8 @@ class Cyez {
      * @private
      */
     RegisterContextMenu() {
-        cytoscape.use(cxtmenu)
+        if (typeof cytoscape('core', 'cxtmenu') !== 'function')
+            cytoscape.use(cxtmenu)
     }
 
     /**
@@ -482,6 +485,36 @@ class Cyez {
     reset() {
         this.cy.elements().remove()
         this.cy.reset()
+    }
+
+    /**
+     * 缩放视图至指定的元素
+     * @param eles {cy.nodes} 需要查看的元素
+     * @see {https://github.com/iVis-at-Bilkent/cytoscape.js-view-utilities/blob/master/src/view-utilities.js#L190}
+     * @returns {cy.nodes}
+     * @public
+     */
+    zoomToSelected(eles) {
+        let boundingBox = eles.boundingBox();
+        let diff_x = Math.abs(boundingBox.x1 - boundingBox.x2);
+        let diff_y = Math.abs(boundingBox.y1 - boundingBox.y2);
+        let padding;
+        if (diff_x >= 200 || diff_y >= 200) {
+            padding = 50;
+        } else {
+            padding = (this.cy.width() < this.cy.height()) ?
+                ((200 - diff_x) / 2 * this.cy.width() / 200) : ((200 - diff_y) / 2 * this.cy.height() / 200);
+        }
+
+        this.cy.animate({
+            fit: {
+                eles: eles,
+                padding: padding
+            }
+        }, {
+            duration: 1200
+        });
+        return eles;
     }
 
     /**
