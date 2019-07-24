@@ -176,9 +176,11 @@ class Cyez {
      * @param name {String} 节点的名称
      * @param type {String} 节点的类型
      * @param attr {Object} 节点的属性
+     * @return {cy.node} 得到的节点实例
+     * @public
      */
     addNode(id, name, type, attr) {
-        this.cy.add({
+        return this.cy.add({
             group: 'nodes',
             data: {id, name, type, attr},
             position: {x: 200, y: 200}
