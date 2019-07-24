@@ -17,6 +17,7 @@ class Layout {
     constructor() {
         this.builtin_layouts = ['grid', 'circle', 'concentric', 'breadthfirst', 'cose']
         this.plugin_layouts = ['cola', 'dagre', 'elk', 'klay', 'spread']
+        this.layouts = [...this.builtin_layouts, ...this.plugin_layouts]
     }
 
     /**
