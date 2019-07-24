@@ -477,6 +477,14 @@ class Cyez {
     }
 
     /**
+     * 将画布完全重置
+     */
+    reset() {
+        this.cy.elements().remove()
+        this.cy.reset()
+    }
+
+    /**
      * 定义了多种点击事件
      * @interface
      */
