@@ -21,7 +21,26 @@ class Cyez {
         this.cy = cytoscape({container, style})
         console.log('Init cyez', this.cy)
         this.layout = new Layout()
+        /**
+         * 判断当前画布是否应该冻结
+         * @var
+         * @type {boolean}
+         */
+        this.freeze = false
+        /**
+         * 用于存储右键菜单
+         * @private
+         * @member Cyez
+         * @type {{}}
+         */
+        this.contextmenu = {}
+        /**
+         * 定义了多种点击事件
+         * @interface
+         */
+        this.event = {}
         this.init()
+        this.initEvent()
     }
 
     /**
@@ -36,22 +55,6 @@ class Cyez {
         this.RegisterGestures()
         this.RegisterLayout()
     }
-
-
-    /**
-     * 判断当前画布是否应该冻结
-     * @var
-     * @type {boolean}
-     */
-    freeze = false
-
-    /**
-     * 用于存储右键菜单
-     * @private
-     * @member Cyez
-     * @type {{}}
-     */
-    contextmenu = {}
 
 
     /**
@@ -601,51 +604,54 @@ class Cyez {
         return eles;
     }
 
+
     /**
-     * 定义了多种点击事件
-     * @interface
+     * 初始化事件
+     * @private
      */
-    event = {
-        /**
-         * 在节点上单击
-         * @method
-         * @param {string} node - 传出点击的节点
-         */
-        clickOnNode: node => {
-        },
-        /**
-         * 在连线上单击
-         * @method
-         * @param {string} edge - 传出点击的连线
-         */
-        clickOnEdge: edge => {
-        },
-        /**
-         * 在背景上单击
-         * @method
-         */
-        clickOnBackground: () => {
-        },
-        /**
-         * 在节点上双击
-         * @method
-         * @param {string} node - 传出点击的节点
-         */
-        dbclickOnNode: node => {
-        },
-        /**
-         * 在连线上双击
-         * @method
-         * @param {string} edge - 传出点击的连线
-         */
-        dbclickOnEdge: edge => {
-        },
-        /**
-         * 在北京上双击
-         * @method
-         */
-        dbclickOnBackground: () => {
-        },
+    initEvent() {
+        this.event = {
+            /**
+             * 在节点上单击
+             * @method
+             * @param {string} node - 传出点击的节点
+             */
+            clickOnNode: node => {
+            },
+            /**
+             * 在连线上单击
+             * @method
+             * @param {string} edge - 传出点击的连线
+             */
+            clickOnEdge: edge => {
+            },
+            /**
+             * 在背景上单击
+             * @method
+             */
+            clickOnBackground: () => {
+            },
+            /**
+             * 在节点上双击
+             * @method
+             * @param {string} node - 传出点击的节点
+             */
+            dbclickOnNode: node => {
+            },
+            /**
+             * 在连线上双击
+             * @method
+             * @param {string} edge - 传出点击的连线
+             */
+            dbclickOnEdge: edge => {
+            },
+            /**
+             * 在北京上双击
+             * @method
+             */
+            dbclickOnBackground: () => {
+            },
+        }
     }
 
 
