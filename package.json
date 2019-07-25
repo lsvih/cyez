@@ -1,6 +1,6 @@
 {
   "name": "cyez",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "cytoscape is too easy",
   "scripts": {
     "build": "webpack --config webpack/webpack.config.prod.js  --colors",
@@ -11,8 +11,7 @@
     "type": "git",
     "url": "git+https://github.com/lsvih/cyez.git"
   },
-  "keywords": [
-  ],
+  "keywords": [],
   "author": "lsvih",
   "license": "MIT",
   "bugs": {
