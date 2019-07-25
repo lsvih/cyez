@@ -27,6 +27,7 @@ class Cyez {
          * @type {boolean}
          */
         this.freeze = false
+        this.current_layout = null
         /**
          * 用于存储右键菜单
          * @private
@@ -208,13 +209,13 @@ class Cyez {
     addNodes(node_list, options) {
         let default_options = {
             position: this.getCenter()
-            }
-        options = assign(default_options,options)
+        }
+        options = assign(default_options, options)
         return this.cy.add(node_list.map(node => {
             return {
                 group: 'nodes',
                 data: node,
-                position: {x:options.position.x + Math.random() * 10,y:options.position.y + Math.random() * 10,}
+                position: {x: options.position.x + Math.random() * 10, y: options.position.y + Math.random() * 10,}
             }
         }))
     }
@@ -384,7 +385,7 @@ class Cyez {
             console.info('当前画布处于冻结状态')
         } else {
             this.freeze = true // 防止重复布局，冻结画布
-            this.cy.layout({
+            this.current_layout = this.cy.layout({
                 name: layout,
                 animate: true,
                 maxSimulationTime: 4000,
@@ -392,11 +393,13 @@ class Cyez {
                 animationEasing: 'ease-in-out',
                 stop: () => {
                     this.freeze = false // 布局完成后解冻画布
+                    this.current_layout = null
                     if (callback != null) {
                         callback()
                     }
                 }
-            }).run()
+            })
+            this.current_layout.run()
         }
     }
 
@@ -418,7 +421,8 @@ class Cyez {
         if (this.freeze) {
             console.info('当前画布处于冻结状态')
         } else {
-            nodes.makeLayout({
+            this.freeze = true
+            this.current_layout = nodes.makeLayout({
                 name: options.layout,
                 fit: false,
                 boundingBox: {
@@ -434,11 +438,28 @@ class Cyez {
                 avoidOverlap: true,
                 stop: () => {
                     this.freeze = false // 布局完成后解冻画布
+                    this.current_layout = null
                     if (callback != null) {
                         callback()
                     }
                 }
-            }).run()
+            })
+            this.current_layout.run()
+        }
+    }
+
+    /**
+     * 停止正在进行的布局
+     * @public
+     * @return Boolean
+     */
+    stopLayout() {
+        if (isEmpty(this.current_layout)) {
+            return false
+        } else {
+            this.current_layout.stop()
+            this.current_layout = null
+            return true
         }
     }
 
