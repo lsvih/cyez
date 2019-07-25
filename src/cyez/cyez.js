@@ -414,7 +414,7 @@ class Cyez {
 
     /**
      * 将数组数据聚合为集合
-     * @param elements {(cytoscape.node | cytoscape.edge | cytoscape.ele)[]} 以数组形式传入的实例
+     * @param elements {(cytoscape.node[] | cytoscape.edge[] | cytoscape.ele[])} 以数组形式传入的实例
      * @returns {cytoscape.eles} 以集合传出的实例
      * @public
      */
@@ -427,7 +427,6 @@ class Cyez {
      * 高亮设定的节点。相当于将除了传入节点之外的其它节点和连线加上 faded class，因此需要在样式中加上 .faded{opacity:0.1} 的设定
      * @param nodes {!cytoscape.node} 需要高亮的节点
      * @public
-     * TODO
      */
     HighlightNodes(nodes) {
         let all_elements = this.cy.elements()
@@ -575,7 +574,7 @@ class Cyez {
     /**
      * 缩放视图至指定的元素
      * @param eles {cy.nodes} 需要查看的元素
-     * @see {https://github.com/iVis-at-Bilkent/cytoscape.js-view-utilities/blob/master/src/view-utilities.js#L190}
+     * @see https://github.com/iVis-at-Bilkent/cytoscape.js-view-utilities/blob/master/src/view-utilities.js#L190
      * @returns {cy.nodes}
      * @public
      */
