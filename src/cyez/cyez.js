@@ -208,13 +208,13 @@ class Cyez {
     addNodes(node_list, options) {
         let default_options = {
             position: this.getCenter()
-        }
-        options = assign(default_options, options)
+            }
+        options = assign(default_options,options)
         return this.cy.add(node_list.map(node => {
             return {
                 group: 'nodes',
                 data: node,
-                position: options.position
+                position: {x:options.position.x + Math.random() * 10,y:options.position.y + Math.random() * 10,}
             }
         }))
     }
