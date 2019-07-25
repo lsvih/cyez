@@ -3,12 +3,13 @@ import dagre from 'cytoscape-dagre'
 import elk from 'cytoscape-elk'
 import klay from 'cytoscape-klay'
 import spread from 'cytoscape-spread'
+import cise from 'cytoscape-cise'
 
 
 class Layout {
     constructor() {
         this.builtin_layouts = ['grid', 'circle', 'concentric', 'breadthfirst', 'cose']
-        this.plugin_layouts = ['cola', 'dagre', 'elk', 'klay', 'spread']
+        this.plugin_layouts = ['cola', 'dagre', 'elk', 'klay', 'spread', 'cise']
         /**
          * 定义布局列表
          * @type {String[]}
@@ -29,6 +30,7 @@ class Layout {
         cy.use(elk)
         cy.use(klay)
         cy.use(spread)
+        cy.use(cise)
     }
 }
 
