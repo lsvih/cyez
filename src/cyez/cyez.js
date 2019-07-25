@@ -58,6 +58,16 @@ class Cyez {
 
 
     /**
+     * 返回画布的中心点
+     * @returns {{x: number, y: number}}
+     * @public
+     */
+    getCenter() {
+        return {x: this.cy.width() / 2, y: this.cy.height() / 2}
+    }
+
+
+    /**
      * Initial layout algorithms
      * @private
      */
@@ -186,7 +196,7 @@ class Cyez {
         return this.cy.add({
             group: 'nodes',
             data: {id, name, type, attr},
-            position: {x: 200, y: 200}
+            position: this.getCenter()
         })
     }
 
@@ -195,11 +205,16 @@ class Cyez {
      * @param node_list {cy.node[]} 传入形式为：[{name, id, type, attr}]
      * @returns {cy.node}
      */
-    addNodes(node_list) {
+    addNodes(node_list, options) {
+        let default_options = {
+            position: this.getCenter()
+        }
+        options = assign(default_options, options)
         return this.cy.add(node_list.map(node => {
             return {
                 group: 'nodes',
-                data: node
+                data: node,
+                position: options.position
             }
         }))
     }
@@ -396,7 +411,8 @@ class Cyez {
     LayoutNodes(nodes, options, callback) {
         let default_options = {
             layout: 'grid',
-            position: {x: 0, y: 0}
+            position: this.getCenter(),
+            radius: 1
         }
         options = assign(default_options, options)
         if (this.freeze) {
@@ -406,10 +422,10 @@ class Cyez {
                 name: options.layout,
                 fit: false,
                 boundingBox: {
-                    x1: options.position.x - 1,
-                    x2: options.position.x + 1,
-                    y1: options.position.y - 1,
-                    y2: options.position.y + 1
+                    x1: options.position.x - options.radius,
+                    x2: options.position.x + options.radius,
+                    y1: options.position.y - options.radius,
+                    y2: options.position.y + options.radius
                 },
                 animate: true,
                 maxSimulationTime: 4000,
