@@ -6,7 +6,7 @@ import {saveAs} from 'file-saver'
 import fileDialog from 'file-dialog'
 import panzoom from 'cytoscape-panzoom'
 import b64toBlob from 'b64-to-blob'
-import {isEmpty} from 'lodash'
+import {isEmpty, assign} from 'lodash'
 
 import 'cytoscape-panzoom/cytoscape.js-panzoom.css';
 
@@ -389,17 +389,28 @@ class Cyez {
     /**
      * 对部分节点应用布局算法
      * @param nodes {!cytoscape.node} 传入需要进行布局的节点
-     * @param layout {!String} 制定一种布局方式，可选值参见 {@link Layout}
+     * @param options {!object} 选项，{layout:'grid', position:{x:0,y:0}}。layout指定一种布局方式，可选值参见 {@link Layout}，position指定布局中心
      * @param callback {?Function} 可选，布局完成后将调用此函数
      * @public
      */
-    LayoutNodes(nodes, layout, callback) {
+    LayoutNodes(nodes, options, callback) {
+        let default_options = {
+            layout: 'grid',
+            position: {x: 0, y: 0}
+        }
+        options = assign(default_options, options)
         if (this.freeze) {
             console.info('当前画布处于冻结状态')
         } else {
             nodes.makeLayout({
-                name: layout,
+                name: options.layout,
                 fit: false,
+                boundingBox: {
+                    x1: options.position.x - 1,
+                    x2: options.position.x + 1,
+                    y1: options.position.y - 1,
+                    y2: options.position.y + 1
+                },
                 animate: true,
                 maxSimulationTime: 4000,
                 animationDuration: 1000,
