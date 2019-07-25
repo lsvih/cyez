@@ -188,6 +188,35 @@ class Cyez {
     }
 
     /**
+     * 增加一系列节点
+     * @param node_list {cy.node[]} 传入形式为：[{name, id, type, attr}]
+     * @returns {cy.node}
+     */
+    addNodes(node_list) {
+        return this.cy.add(node_list.map(node => {
+            return {
+                group: 'nodes',
+                data: node
+            }
+        }))
+    }
+
+
+    /**
+     * 增加一系列节点
+     * @param edge_list {cy.edge[]} 传入形式为：[{id, name, source, target}]
+     * @returns {cy.edge}
+     */
+    addEdges(edge_list) {
+        return this.cy.add(edge_list.map(edge => {
+            return {
+                group: 'edges',
+                data: edge
+            }
+        }))
+    }
+
+    /**
      * 在 id 为 source_id 和 id 为 target_id 的两个节点间增加关系为 name 的边
      * @param source_id {(Number | String)} 源节点的 id
      * @param target_id {(Number | String)} 目标节点的 id
@@ -197,7 +226,7 @@ class Cyez {
     addEdge(source_id, target_id, name) {
         this.cy.add({
             group: 'edges',
-            data: {source: source_id, target: target_id, name}
+            data: {id: `${source_id}->${target_id}`, source: source_id, target: target_id, name}
         })
     }
 
@@ -225,13 +254,15 @@ class Cyez {
     /**
      * 根据 id 获取边的实例
      * @param id {!(String | Number)} 需要查询的边的 id
+     * @param silence {boolean} 是否在控制栏显示错误
      * @return {?cytoscape.edge} 查询得到的边，如果没有找到对应 id 的边则返回 null
      * @public
      */
-    getEdgeById(id) {
+    getEdgeById(id, silence = false) {
         let edge = this.cy.edges(`#${id}`)
         if (edge.length === 0) {
-            console.warn(`没有找到 id 为 ${id} 的连边`)
+            if (!silence)
+                console.warn(`没有找到 id 为 ${id} 的连边`)
             return null
         } else {
             return edge
@@ -303,8 +334,8 @@ class Cyez {
      * @returns {boolean}
      * @public
      */
-    isIdExist(id){
-        return !isEmpty(this.getNodeById(id)) || !isEmpty(this.getEdgeById(id))
+    isIdExist(id) {
+        return !isEmpty(this.getNodeById(id)) && !isEmpty(this.getEdgeById(id, true))
     }
 
 
@@ -379,6 +410,16 @@ class Cyez {
                 }
             }).run()
         }
+    }
+
+    /**
+     * 将数组数据聚合为集合
+     * @param elements {(cytoscape.node | cytoscape.edge | cytoscape.ele)[]} 以数组形式传入的实例
+     * @returns {cytoscape.eles} 以集合传出的实例
+     * @public
+     */
+    Collection(elements) {
+        return this.cy.collection().add(elements)
     }
 
 
