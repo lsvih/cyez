@@ -6,23 +6,19 @@
     "build": "webpack --config webpack/webpack.config.prod.js  --colors",
     "start": "webpack-dev-server --open --config webpack/webpack.config.dev.js"
   },
+  "main": "src/cyez/cyez.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wbkd/webpack-starter.git"
+    "url": "git+https://github.com/lsvih/cyez.git"
   },
   "keywords": [
-    "webpack",
-    "startkit",
-    "frontend",
-    "es6",
-    "javascript",
-    "webdev"
   ],
-  "author": "webkid.io",
+  "author": "lsvih",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/wbkd/webpack-starter/issues"
+    "url": "https://github.com/lsvih/cyez/issues"
   },
+  "homepage": "https://github.com/lsvih/cyez",
   "devDependencies": {
     "@babel/core": "^7.4.0",
     "@babel/plugin-proposal-class-properties": "^7.4.0",
