@@ -464,6 +464,22 @@ class Cyez {
     }
 
     /**
+     * 将布局锁定
+     * @public
+     */
+    lock() {
+        this.cy.elements().lock()
+    }
+
+    /**
+     * 解锁布局
+     * @public
+     */
+    unlock() {
+        this.cy.elements().unlock()
+    }
+
+    /**
      * 将数组数据聚合为集合
      * @param elements {(cytoscape.node[] | cytoscape.edge[] | cytoscape.ele[])} 以数组形式传入的实例
      * @returns {cytoscape.eles} 以集合传出的实例
