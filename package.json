@@ -1,6 +1,6 @@
 {
   "name": "cyez",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "cytoscape is too easy",
   "scripts": {
     "build": "webpack --config webpack/webpack.config.prod.js  --colors",
