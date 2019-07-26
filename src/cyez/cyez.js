@@ -7,7 +7,7 @@ import {saveAs} from 'file-saver'
 import fileDialog from 'file-dialog'
 import panzoom from 'cytoscape-panzoom'
 import b64toBlob from 'b64-to-blob'
-import {isEmpty, assign} from 'lodash'
+import {isEmpty, assign, merge} from 'lodash'
 
 import 'cytoscape-panzoom/cytoscape.js-panzoom.css';
 
@@ -420,20 +420,25 @@ class Cyez {
             position: this.getCenter(),
             radius: 1
         }
-        options = assign(default_options, options)
+        let new_options = merge({}, default_options, options)
+        console.log(new_options)
+        new_options.position = {
+            x1: new_options.position.x - new_options.radius,
+            x2: new_options.position.x + new_options.radius,
+            y1: new_options.position.y - new_options.radius,
+            y2: new_options.position.y + new_options.radius
+        }
+        console.log(new_options)
+        new_options = merge({}, new_options, options)
+        console.log(new_options)
         if (this.freeze) {
             console.info('当前画布处于冻结状态')
         } else {
             this.freeze = true
             this.current_layout = nodes.makeLayout({
-                name: options.layout,
+                name: new_options.layout,
                 fit: false,
-                boundingBox: {
-                    x1: options.position.x - options.radius,
-                    x2: options.position.x + options.radius,
-                    y1: options.position.y - options.radius,
-                    y2: options.position.y + options.radius
-                },
+                boundingBox: new_options.position,
                 animate: true,
                 maxSimulationTime: 4000,
                 animationDuration: 1000,
