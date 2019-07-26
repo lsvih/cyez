@@ -1,6 +1,7 @@
 import cytoscape from 'cytoscape'
 import cxtmenu from 'cytoscape-cxtmenu'
 import navigator from 'cytoscape-navigator'
+import RegisterEdgeHandle from './cyez-edgehandle'
 import Layout from './cyez-layout'
 import {saveAs} from 'file-saver'
 import fileDialog from 'file-dialog'
@@ -28,6 +29,7 @@ class Cyez {
          */
         this.freeze = false
         this.current_layout = null
+        this.edge_handle = null
         /**
          * 用于存储右键菜单
          * @private
@@ -52,6 +54,7 @@ class Cyez {
         this.RegisterContextMenu()
         this.RegisterNavigator()
         this.RegisterPanzoom()
+        RegisterEdgeHandle(cytoscape, this)
         this.RegisterDoubleClickEvent()
         this.RegisterGestures()
         this.RegisterLayout()
