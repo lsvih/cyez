@@ -19,7 +19,14 @@ class Cyez {
      */
     constructor(container, style) {
         console.log('Bind cytoscape to DOM ', container)
-        this.cy = cytoscape({container, style})
+        this.cy = cytoscape({
+            container,
+            style,
+            motionBlur: true,
+            hideEdgesOnViewport: true,
+            hideLabelsOnViewport: true,
+            wheelSensitivity: .6
+        })
         console.log('Init cyez', this.cy)
         this.layout = new Layout()
         /**
