@@ -29,12 +29,13 @@
             <pre class="prettyprint source linenums"><code>import cytoscape from 'cytoscape'
 import cxtmenu from 'cytoscape-cxtmenu'
 import navigator from 'cytoscape-navigator'
+import RegisterEdgeHandle from './cyez-edgehandle'
 import Layout from './cyez-layout'
 import {saveAs} from 'file-saver'
 import fileDialog from 'file-dialog'
 import panzoom from 'cytoscape-panzoom'
 import b64toBlob from 'b64-to-blob'
-import {isEmpty} from 'lodash'
+import {isEmpty, assign, merge} from 'lodash'
 
 import 'cytoscape-panzoom/cytoscape.js-panzoom.css';
 
@@ -55,6 +56,8 @@ class Cyez {
          * @type {boolean}
          */
         this.freeze = false
+        this.current_layout = null
+        this.edge_handle = null
         /**
          * 用于存储右键菜单
          * @private
@@ -79,9 +82,20 @@ class Cyez {
         this.RegisterContextMenu()
         this.RegisterNavigator()
         this.RegisterPanzoom()
+        RegisterEdgeHandle(cytoscape, this)
         this.RegisterDoubleClickEvent()
         this.RegisterGestures()
         this.RegisterLayout()
+    }
+
+
+    /**
+     * 返回画布的中心点
+     * @returns {{x: number, y: number}}
+     * @public
+     */
+    getCenter() {
+        return {x: this.cy.width() / 2, y: this.cy.height() / 2}
     }
 
 
@@ -214,7 +228,7 @@ class Cyez {
         return this.cy.add({
             group: 'nodes',
             data: {id, name, type, attr},
-            position: {x: 200, y: 200}
+            position: this.getCenter()
         })
     }
 
@@ -223,11 +237,16 @@ class Cyez {
      * @param node_list {cy.node[]} 传入形式为：[{name, id, type, attr}]
      * @returns {cy.node}
      */
-    addNodes(node_list) {
+    addNodes(node_list, options) {
+        let default_options = {
+            position: this.getCenter()
+        }
+        options = assign(default_options, options)
         return this.cy.add(node_list.map(node => {
             return {
                 group: 'nodes',
-                data: node
+                data: node,
+                position: {x: options.position.x + Math.random() * 10, y: options.position.y + Math.random() * 10,}
             }
         }))
     }
@@ -397,7 +416,7 @@ class Cyez {
             console.info('当前画布处于冻结状态')
         } else {
             this.freeze = true // 防止重复布局，冻结画布
-            this.cy.layout({
+            this.current_layout = this.cy.layout({
                 name: layout,
                 animate: true,
                 maxSimulationTime: 4000,
@@ -405,11 +424,13 @@ class Cyez {
                 animationEasing: 'ease-in-out',
                 stop: () => {
                     this.freeze = false // 布局完成后解冻画布
+                    this.current_layout = null
                     if (callback != null) {
                         callback()
                     }
                 }
-            }).run()
+            })
+            this.current_layout.run()
         }
     }
 
@@ -417,17 +438,32 @@ class Cyez {
     /**
      * 对部分节点应用布局算法
      * @param nodes {!cytoscape.node} 传入需要进行布局的节点
-     * @param layout {!String} 制定一种布局方式，可选值参见 {@link Layout}
+     * @param options {!object} 选项，{layout:'grid', position:{x:0,y:0}}。layout指定一种布局方式，可选值参见 {@link Layout}，position指定布局中心
      * @param callback {?Function} 可选，布局完成后将调用此函数
      * @public
      */
-    LayoutNodes(nodes, layout, callback) {
+    LayoutNodes(nodes, options, callback) {
+        let default_options = {
+            layout: 'grid',
+            position: this.getCenter(),
+            radius: 1
+        }
+        let new_options = merge({}, default_options, options)
+        new_options.position = {
+            x1: new_options.position.x - new_options.radius,
+            x2: new_options.position.x + new_options.radius,
+            y1: new_options.position.y - new_options.radius,
+            y2: new_options.position.y + new_options.radius
+        }
+        new_options = merge({}, new_options, options)
         if (this.freeze) {
             console.info('当前画布处于冻结状态')
         } else {
-            nodes.makeLayout({
-                name: layout,
+            this.freeze = true
+            this.current_layout = nodes.makeLayout({
+                name: new_options.layout,
                 fit: false,
+                boundingBox: new_options.position,
                 animate: true,
                 maxSimulationTime: 4000,
                 animationDuration: 1000,
@@ -435,12 +471,45 @@ class Cyez {
                 avoidOverlap: true,
                 stop: () => {
                     this.freeze = false // 布局完成后解冻画布
+                    this.current_layout = null
                     if (callback != null) {
                         callback()
                     }
                 }
-            }).run()
+            })
+            this.current_layout.run()
         }
+    }
+
+    /**
+     * 停止正在进行的布局
+     * @public
+     * @return Boolean
+     */
+    stopLayout() {
+        if (isEmpty(this.current_layout)) {
+            return false
+        } else {
+            this.current_layout.stop()
+            this.current_layout = null
+            return true
+        }
+    }
+
+    /**
+     * 将布局锁定
+     * @public
+     */
+    lock() {
+        this.cy.elements().lock()
+    }
+
+    /**
+     * 解锁布局
+     * @public
+     */
+    unlock() {
+        this.cy.elements().unlock()
     }
 
     /**
@@ -702,7 +771,7 @@ export default Cyez
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.2</a> on Thu Jul 25 2019 15:05:48 GMT+0800 (China Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Fri Jul 26 2019 11:52:50 GMT+0800 (China Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

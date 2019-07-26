@@ -421,16 +421,13 @@ class Cyez {
             radius: 1
         }
         let new_options = merge({}, default_options, options)
-        console.log(new_options)
         new_options.position = {
             x1: new_options.position.x - new_options.radius,
             x2: new_options.position.x + new_options.radius,
             y1: new_options.position.y - new_options.radius,
             y2: new_options.position.y + new_options.radius
         }
-        console.log(new_options)
         new_options = merge({}, new_options, options)
-        console.log(new_options)
         if (this.freeze) {
             console.info('当前画布处于冻结状态')
         } else {

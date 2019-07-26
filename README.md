@@ -40,5 +40,5 @@ npm start
 ### Generate documents
 
 ```bash
-jsdoc -R README.md -d docs src/cyez/cyez.js
+npm run doc
 ```
