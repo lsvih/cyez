@@ -25,7 +25,8 @@ class Cyez {
             motionBlur: true,
             hideEdgesOnViewport: true,
             hideLabelsOnViewport: true,
-            wheelSensitivity: .6
+            wheelSensitivity: .6,
+            pixelRatio: 1
         })
         console.log('Init cyez', this.cy)
         this.layout = new Layout()
