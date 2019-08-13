@@ -302,6 +302,7 @@ class Cyez {
     /**
      * 获取当前被选中的元素（包括节点和连边）
      * @return {?cytoscape.element} 被选中的元素的实例
+     * @public
      */
     getSelectedElements() {
         return this.cy.$(':selected')
@@ -310,6 +311,7 @@ class Cyez {
     /**
      * 获取当前被选中的节点
      * @return {?cytoscape.node} 被选中的节点的实例
+     * @public
      */
     getSelectedNodes() {
         return this.cy.$('node:selected')
@@ -318,6 +320,7 @@ class Cyez {
     /**
      * 获取当前被选中的连边
      * @return {?cytoscape.edge} 被选中的连边的实例
+     * @public
      */
     getSelectedEdges() {
         return this.cy.$('edge:selected')
@@ -355,6 +358,25 @@ class Cyez {
             return selector[0]
         } else
             return null
+    }
+
+    /**
+     * 反选，即取消当前选中的元素，选中当前未选中的元素
+     * @public
+     */
+    inverseSelection() {
+        let un_selected_elems = this.getUnselectedElements()
+        this.getSelectedElements().unselect()
+        un_selected_elems.select()
+    }
+
+    /**
+     * 获取当前未被选中的元素（包括节点和连边）
+     * @return {?cytoscape.element} 被选中的元素的实例
+     * @public
+     */
+    getUnselectedElements() {
+        return this.cy.$(':unselected')
     }
 
 
