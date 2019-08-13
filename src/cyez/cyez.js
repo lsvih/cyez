@@ -7,7 +7,7 @@ import {saveAs} from 'file-saver'
 import fileDialog from 'file-dialog'
 import panzoom from 'cytoscape-panzoom'
 import b64toBlob from 'b64-to-blob'
-import {isEmpty, assign, merge} from 'lodash'
+import {isEmpty, assign, merge, concat, pull} from 'lodash'
 
 import 'cytoscape-panzoom/cytoscape.js-panzoom.css';
 
@@ -701,6 +701,52 @@ class Cyez {
             duration: 1200
         });
         return eles;
+    }
+
+    /**
+     * 更新新的样式
+     * @param new_style {JSON} 以JSON形式传入的新的样式
+     */
+    updateStyleFromJSON(new_style) {
+        let old_style = this.cy.style().json()
+        let style = concat(old_style, new_style)
+        this.cy.style().fromJson(style).update()
+    }
+
+
+    /**
+     * 隐藏指定的元素，即为selector的元素添加 display: 'none' 的样式属性
+     * @param selector
+     * @public
+     */
+    hideNodes(selector) {
+        let hidden_style = [{
+            selector,
+            style: {
+                display: 'none'
+            }
+        }]
+        this.updateStyleFromJSON(hidden_style)
+    }
+
+    /**
+     * 显示指定的元素，即为selector的元素删除 visibility: hide 的样式属性
+     * @param selector
+     * @public
+     */
+    showNodes(selector) {
+        let old_style = this.cy.style().json()
+        let style = old_style.filter(e => !(e.selector === selector && e.style.display === 'none'))
+        this.cy.style().fromJson(style).update()
+    }
+
+    /**
+     * 选择器
+     * @param selector {String} cytoscape选择器
+     * @returns {*|E.fn.init}
+     */
+    $(selector) {
+        return this.cy.$(selector)
     }
 
 
