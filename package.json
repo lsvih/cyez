@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.4.0",
-    "@lsvih/cytoscape-cxtmenu": "^3.1.1",
+    "@lsvih/cytoscape-cxtmenu": "^3.1.3",
     "b64-to-blob": "^1.2.19",
     "core-js": "^3.0.1",
     "cytoscape": "^3.7.3",
