@@ -566,7 +566,7 @@ class Cyez {
 
     /**
      * 新增一个右键菜单
-     * @param id {int} 右键菜单的标识，可以用此标识销毁对应菜单
+     * @param id {int|string} 右键菜单的标识，可以用此标识销毁对应菜单
      * @param option 参考 cytoscape contextmenu 文档
      */
     addContextMenu(id, option) {
