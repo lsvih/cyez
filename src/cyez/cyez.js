@@ -564,41 +564,17 @@ class Cyez {
         return this.cy.edges().map(e => e.data())
     }
 
-
     /**
      * 新增一个右键菜单
      * @param id {int} 右键菜单的标识，可以用此标识销毁对应菜单
-     * @param selector {String} 右击的对象，使用 cy selector 进行选择。比如 node 是在节点上右击，node:selected 是在
-     * 选中的节点上右击。更多 selector 请参考 {@link https://js.cytoscape.org/#selectors}
-     * @param content {String[]} 右键菜单的内容，用数组 Html 代码传递
-     * @param func {Function[]} 右键菜单的功能，用数组 Function 传递
-     * @example
-     *  addContextMenu(1, 'node',
-     *  content = ['<span>提示1</span>','<span>提示2</span>']
-     *  func = [alert(1), alert(2)])
+     * @param option 参考 cytoscape contextmenu 文档
      */
-    addContextMenu(id, selector, content, func) {
+    addContextMenu(id, option) {
         if (id in this.contextmenu) {
             console.error(`id 为${id}的右键菜单已经存在`)
             return false
         }
-        if (!(content instanceof Array && func instanceof Array)) {
-            console.error('content 与 func 必须为数组形式')
-            return false
-        }
-        if (content.length !== func.length) {
-            console.error('content 与 func 数组长度必须一致')
-            return false
-        }
-        this.contextmenu[id] = this.cy.cxtmenu({
-            selector: 'node',
-            commands: content.map((_, i) => {
-                return {
-                    content: content[i],
-                    select: func[i]
-                }
-            })
-        })
+        this.contextmenu[id] = this.cy.cxtmenu(option)
     }
 
     /**
