@@ -1,5 +1,5 @@
 import cytoscape from 'cytoscape'
-import cxtmenu from 'cytoscape-cxtmenu'
+import cxtmenu from '@lsvih/cytoscape-cxtmenu'
 import navigator from 'cytoscape-navigator'
 import RegisterEdgeHandle from './cyez-edgehandle'
 import Layout from './cyez-layout'

@@ -42,12 +42,12 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.4.0",
+    "@lsvih/cytoscape-cxtmenu": "^3.1.0",
     "b64-to-blob": "^1.2.19",
     "core-js": "^3.0.1",
     "cytoscape": "^3.7.3",
     "cytoscape-avsdf": "^1.0.0",
     "cytoscape-cola": "^2.3.0",
-    "cytoscape-cxtmenu": "^3.1.0",
     "cytoscape-dagre": "^2.2.2",
     "cytoscape-edgehandles": "^3.6.0",
     "cytoscape-elk": "^1.1.10",
