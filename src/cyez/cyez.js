@@ -192,6 +192,16 @@ class Cyez {
             if (target.isEdge())
                 return this.event.clickOnEdge(target.data())
         })
+
+        this.cy.on('cxttap', e => {
+            let target = e.target
+            if (e.target === this.cy)// click on background
+                return this.event.rightclickOnBackground()
+            if (target.isNode())
+                return this.event.rightclickOnNode(target.data())
+            if (target.isEdge())
+                return this.event.rightclickOnEdge(target.data())
+        })
     }
 
 
@@ -767,10 +777,30 @@ class Cyez {
             dbclickOnEdge: edge => {
             },
             /**
-             * 在北京上双击
+             * 在背景上双击
              * @method
              */
             dbclickOnBackground: () => {
+            },
+            /**
+             * 在节点上右击
+             * @method
+             * @param {string} node - 传出点击的节点
+             */
+            rightclickOnNode: node => {
+            },
+            /**
+             * 在连线上右击
+             * @method
+             * @param {string} edge - 传出点击的连线
+             */
+            rightclickOnEdge: edge => {
+            },
+            /**
+             * 在背景上右击
+             * @method
+             */
+            rightclickOnBackground: () => {
             },
         }
     }
