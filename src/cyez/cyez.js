@@ -48,7 +48,7 @@ class Cyez {
         /**
          * 定义了多种点击事件
          * @interface
-         */
+         */;
         this.event = {}
         this.init()
         this.initEvent()
@@ -803,6 +803,39 @@ class Cyez {
             rightclickOnBackground: () => {
             },
         }
+    }
+
+    /**
+     * 判断指定 elements 中是否包含环
+     * @param elements
+     * @return {Boolean}
+     */
+    hasLoop(elements) {
+        let clearClass = () =>
+            this.cy.batch(() => {
+                elements.removeClass('visited')
+            })
+        let nodes = elements.nodes()
+        let flag = false
+        for (let start_node of nodes.toArray()) {
+            if (flag)
+                break
+            elements.dfs({
+                root: `#${start_node.id()}`,
+                directed: true,
+                visit: (v, e, u, i, depth) => {
+                    v.addClass('visited')
+                    for (let child of v.outgoers().toArray())
+                        if (child.hasClass('visited')) {
+                            flag = true
+                            return false
+                        }
+                }
+            })
+            clearClass()
+        }
+        clearClass()
+        return flag
     }
 
 
