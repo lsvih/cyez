@@ -266,7 +266,9 @@ class Cyez {
     addEdge(source_id, target_id, name) {
         this.cy.add({
             group: 'edges',
-            data: {id: `${source_id}->${target_id}`, source: source_id, target: target_id, name}
+            data: {
+                id: `${source_id}to${target_id}`, source: source_id, target: target_id, name
+            }
         })
     }
 
