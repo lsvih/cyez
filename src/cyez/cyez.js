@@ -301,7 +301,7 @@ class Cyez {
      * @public
      */
     getEdgeById(id, silence = false) {
-        let edge = this.cy.edges(`#${id}`)
+        let edge = this.cy.edges(`edge#${id}`)
         if (edge.length === 0) {
             if (!silence)
                 console.warn(`没有找到 id 为 ${id} 的连边`)
@@ -362,7 +362,7 @@ class Cyez {
      * @public
      */
     getNodeById(id) {
-        let selector = this.cy.$(`#${id}`)
+        let selector = this.cy.$(`node#${id}`)
         if (selector.length === 1)
             return selector[0]
         else if (selector.length > 1) {
