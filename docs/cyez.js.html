@@ -27,7 +27,7 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>import cytoscape from 'cytoscape'
-import cxtmenu from 'cytoscape-cxtmenu'
+import cxtmenu from '@lsvih/cytoscape-cxtmenu'
 import navigator from 'cytoscape-navigator'
 import RegisterEdgeHandle from './cyez-edgehandle'
 import Layout from './cyez-layout'
@@ -35,7 +35,7 @@ import {saveAs} from 'file-saver'
 import fileDialog from 'file-dialog'
 import panzoom from 'cytoscape-panzoom'
 import b64toBlob from 'b64-to-blob'
-import {isEmpty, assign, merge} from 'lodash'
+import {isEmpty, assign, merge, concat, pull} from 'lodash'
 
 import 'cytoscape-panzoom/cytoscape.js-panzoom.css';
 
@@ -47,7 +47,15 @@ class Cyez {
      */
     constructor(container, style) {
         console.log('Bind cytoscape to DOM ', container)
-        this.cy = cytoscape({container, style})
+        this.cy = cytoscape({
+            container,
+            style,
+            motionBlur: true,
+            hideEdgesOnViewport: true,
+            hideLabelsOnViewport: true,
+            wheelSensitivity: .6,
+            pixelRatio: 1
+        })
         console.log('Init cyez', this.cy)
         this.layout = new Layout()
         /**
@@ -68,7 +76,7 @@ class Cyez {
         /**
          * 定义了多种点击事件
          * @interface
-         */
+         */;
         this.event = {}
         this.init()
         this.initEvent()
@@ -212,6 +220,16 @@ class Cyez {
             if (target.isEdge())
                 return this.event.clickOnEdge(target.data())
         })
+
+        this.cy.on('cxttap', e => {
+            let target = e.target
+            if (e.target === this.cy)// click on background
+                return this.event.rightclickOnBackground()
+            if (target.isNode())
+                return this.event.rightclickOnNode(target.data())
+            if (target.isEdge())
+                return this.event.rightclickOnEdge(target.data())
+        })
     }
 
 
@@ -276,7 +294,9 @@ class Cyez {
     addEdge(source_id, target_id, name) {
         this.cy.add({
             group: 'edges',
-            data: {id: `${source_id}->${target_id}`, source: source_id, target: target_id, name}
+            data: {
+                id: `${source_id}to${target_id}`, source: source_id, target: target_id, name
+            }
         })
     }
 
@@ -322,6 +342,7 @@ class Cyez {
     /**
      * 获取当前被选中的元素（包括节点和连边）
      * @return {?cytoscape.element} 被选中的元素的实例
+     * @public
      */
     getSelectedElements() {
         return this.cy.$(':selected')
@@ -330,6 +351,7 @@ class Cyez {
     /**
      * 获取当前被选中的节点
      * @return {?cytoscape.node} 被选中的节点的实例
+     * @public
      */
     getSelectedNodes() {
         return this.cy.$('node:selected')
@@ -338,6 +360,7 @@ class Cyez {
     /**
      * 获取当前被选中的连边
      * @return {?cytoscape.edge} 被选中的连边的实例
+     * @public
      */
     getSelectedEdges() {
         return this.cy.$('edge:selected')
@@ -375,6 +398,25 @@ class Cyez {
             return selector[0]
         } else
             return null
+    }
+
+    /**
+     * 反选，即取消当前选中的元素，选中当前未选中的元素
+     * @public
+     */
+    inverseSelection() {
+        let un_selected_elems = this.getUnselectedElements()
+        this.getSelectedElements().unselect()
+        un_selected_elems.select()
+    }
+
+    /**
+     * 获取当前未被选中的元素（包括节点和连边）
+     * @return {?cytoscape.element} 被选中的元素的实例
+     * @public
+     */
+    getUnselectedElements() {
+        return this.cy.$(':unselected')
     }
 
 
@@ -562,41 +604,17 @@ class Cyez {
         return this.cy.edges().map(e => e.data())
     }
 
-
     /**
      * 新增一个右键菜单
-     * @param id {int} 右键菜单的标识，可以用此标识销毁对应菜单
-     * @param selector {String} 右击的对象，使用 cy selector 进行选择。比如 node 是在节点上右击，node:selected 是在
-     * 选中的节点上右击。更多 selector 请参考 {@link https://js.cytoscape.org/#selectors}
-     * @param content {String[]} 右键菜单的内容，用数组 Html 代码传递
-     * @param func {Function[]} 右键菜单的功能，用数组 Function 传递
-     * @example
-     *  addContextMenu(1, 'node',
-     *  content = ['&lt;span>提示1&lt;/span>','&lt;span>提示2&lt;/span>']
-     *  func = [alert(1), alert(2)])
+     * @param id {int|string} 右键菜单的标识，可以用此标识销毁对应菜单
+     * @param option 参考 cytoscape contextmenu 文档
      */
-    addContextMenu(id, selector, content, func) {
+    addContextMenu(id, option) {
         if (id in this.contextmenu) {
             console.error(`id 为${id}的右键菜单已经存在`)
             return false
         }
-        if (!(content instanceof Array &amp;&amp; func instanceof Array)) {
-            console.error('content 与 func 必须为数组形式')
-            return false
-        }
-        if (content.length !== func.length) {
-            console.error('content 与 func 数组长度必须一致')
-            return false
-        }
-        this.contextmenu[id] = this.cy.cxtmenu({
-            selector: 'node',
-            commands: content.map((_, i) => {
-                return {
-                    content: content[i],
-                    select: func[i]
-                }
-            })
-        })
+        this.contextmenu[id] = this.cy.cxtmenu(option)
     }
 
     /**
@@ -701,6 +719,52 @@ class Cyez {
         return eles;
     }
 
+    /**
+     * 更新新的样式
+     * @param new_style {JSON} 以JSON形式传入的新的样式
+     */
+    updateStyleFromJSON(new_style) {
+        let old_style = this.cy.style().json()
+        let style = concat(old_style, new_style)
+        this.cy.style().fromJson(style).update()
+    }
+
+
+    /**
+     * 隐藏指定的元素，即为selector的元素添加 display: 'none' 的样式属性
+     * @param selector
+     * @public
+     */
+    hideNodes(selector) {
+        let hidden_style = [{
+            selector,
+            style: {
+                display: 'none'
+            }
+        }]
+        this.updateStyleFromJSON(hidden_style)
+    }
+
+    /**
+     * 显示指定的元素，即为selector的元素删除 visibility: hide 的样式属性
+     * @param selector
+     * @public
+     */
+    showNodes(selector) {
+        let old_style = this.cy.style().json()
+        let style = old_style.filter(e => !(e.selector === selector &amp;&amp; e.style.display === 'none'))
+        this.cy.style().fromJson(style).update()
+    }
+
+    /**
+     * 选择器
+     * @param selector {String} cytoscape选择器
+     * @returns {*|E.fn.init}
+     */
+    $(selector) {
+        return this.cy.$(selector)
+    }
+
 
     /**
      * 初始化事件
@@ -743,12 +807,65 @@ class Cyez {
             dbclickOnEdge: edge => {
             },
             /**
-             * 在北京上双击
+             * 在背景上双击
              * @method
              */
             dbclickOnBackground: () => {
             },
+            /**
+             * 在节点上右击
+             * @method
+             * @param {string} node - 传出点击的节点
+             */
+            rightclickOnNode: node => {
+            },
+            /**
+             * 在连线上右击
+             * @method
+             * @param {string} edge - 传出点击的连线
+             */
+            rightclickOnEdge: edge => {
+            },
+            /**
+             * 在背景上右击
+             * @method
+             */
+            rightclickOnBackground: () => {
+            },
         }
+    }
+
+    /**
+     * 判断指定 elements 中是否包含环
+     * @param elements
+     * @return {Boolean}
+     */
+    hasLoop(elements) {
+        let clearClass = () =>
+            this.cy.batch(() => {
+                elements.removeClass('visited')
+            })
+        let nodes = elements.nodes()
+        let flag = false
+        for (let start_node of nodes.toArray()) {
+            if (flag)
+                break
+            elements.dfs({
+                root: `#${start_node.id()}`,
+                directed: true,
+                visit: (v, e, u, i, depth) => {
+                    v.addClass('visited')
+                    for (let child of v.outgoers().toArray())
+                        if (child.hasClass('visited')) {
+                            flag = true
+                            return false
+                        }
+                }
+            })
+            clearClass()
+        }
+        clearClass()
+        return flag
     }
 
 
@@ -765,13 +882,13 @@ export default Cyez
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Cyez.html">Cyez</a></li></ul><h3>Interfaces</h3><ul><li><a href="Cyez_event.html">event</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Cyez.html">Cyez</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Fri Jul 26 2019 11:52:50 GMT+0800 (China Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Wed Sep 04 2019 12:35:45 GMT+0800 (China Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>
