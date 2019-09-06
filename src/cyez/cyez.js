@@ -543,10 +543,7 @@ class Cyez {
      * @public
      */
     HighlightNodes(nodes) {
-        let all_elements = this.cy.elements()
-        let n_nodes = nodes.closedNeighborhood()
-        let others = all_elements.not(nodes).not(n_nodes)
-        this.cy.batch(() => others.addClass('faded'))
+        this.cy.batch(() => nodes.addClass('highlighted'))
     }
 
 
@@ -556,7 +553,7 @@ class Cyez {
      */
     CancelHighlight() {
         let all_elements = this.cy.elements()
-        this.cy.batch(() => all_elements.removeClass('faded'))
+        this.cy.batch(() => all_elements.removeClass('highlighted'))
     }
 
 
