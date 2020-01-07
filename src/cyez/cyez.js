@@ -548,6 +548,16 @@ class Cyez {
 
 
     /**
+     * 对设定的节点取消高亮。相当于将除了传入节点之外的其它节点和连线去掉 faded class
+     * @param nodes {!cytoscape.node} 需要高亮的节点
+     * @public
+     */
+    CancelHighlightNodes(nodes) {
+        this.cy.batch(() => nodes.removeClass('highlighted'))
+    }
+
+
+    /**
      * 取消高亮节点，即将全部的节点的 faded class 都去掉
      * @public
      */
