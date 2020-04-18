@@ -36,14 +36,13 @@ module.exports = {
             },
             {
                 test: /\.s?css$/i,
-                use: ['style-loader', 'css-loader?sourceMap=true', 'sass-loader']
+                use: ['style-loader', 'css-loader?sourceMap=true']
             }
             // {
             //   test: /\.s?css/i,
             //   use : [
             //     MiniCssExtractPlugin.loader,
             //     'css-loader',
-            //     'sass-loader'
             //   ]
             // }
         ]

@@ -421,7 +421,7 @@ class Cyez {
 
     /**
      * 将布局算法应用与全部节点。不能在一次布局完成前进行第二次布局。
-     * @param layout {String} 指定一种布局方式，可选值有：['grid', 'circle', 'concentric', 'breadthfirst', 'cose', 'cola', 'dagre', 'elk', 'klay', 'spread']
+     * @param layout {String} 指定一种布局方式，可选值有：['grid', 'circle', 'concentric', 'breadthfirst', 'cose', 'cola', 'dagre', 'klay', 'spread']
      * @param callback {?Function} 可选，布局完成之后将调用此函数
      * @public
      */
