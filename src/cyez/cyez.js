@@ -543,9 +543,26 @@ class Cyez {
      * @public
      */
     HighlightNodes(nodes) {
-        this.cy.batch(() => nodes.addClass('highlighted'))
+        this.HighlightElements(nodes)
     }
 
+    /**
+     * 高亮设定的连边。
+     * @param edges {!cytoscape.edge} 需要高亮的连边
+     * @public
+     */
+    HighlightEdges(edges) {
+        this.HighlightElements(edges)
+    }
+
+    /**
+     * 高亮设定的元素（包括节点和连边）
+     * @param elem {!cytoscape.element} 需要高亮的元素
+     * @public
+     */
+    HighlightElements(elems) {
+        this.cy.batch(() => elems.addClass('highlighted'))
+    }
 
     /**
      * 对设定的节点取消高亮。相当于将除了传入节点之外的其它节点和连线去掉 faded class
@@ -553,9 +570,17 @@ class Cyez {
      * @public
      */
     CancelHighlightNodes(nodes) {
-        this.cy.batch(() => nodes.removeClass('highlighted'))
+        this.CancelHighlightElements(nodes)
     }
 
+    /**
+     * 对设定的元素取消高亮。相当于将除了传入节点之外的其它节点和连线去掉 faded class
+     * @param nodes {!cytoscape.element} 需要高亮的节点
+     * @public
+     */
+    CancelHighlightElements(elems) {
+        this.cy.batch(() => elems.removeClass('highlighted'))
+    }
 
     /**
      * 取消高亮节点，即将全部的节点的 faded class 都去掉
