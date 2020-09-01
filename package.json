@@ -7,7 +7,7 @@
     "start": "webpack-dev-server --open --config webpack/webpack.config.dev.js",
     "doc": "jsdoc -R README.md -d docs src/cyez/cyez.js"
   },
-  "main": "src/cyez/cyez.js",
+  "main": "dist/cyez.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lsvih/cyez.git"
