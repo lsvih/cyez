@@ -14,7 +14,8 @@ module.exports = {
     output: {
         path: Path.resolve('dist'),
         filename: 'index.js',
-        libraryTarget: 'commonjs2'
+        // library: "Cyez", // For <script> import mode
+        libraryTarget: 'commonjs2',
     },
     plugins: [
         new CleanWebpackPlugin(),

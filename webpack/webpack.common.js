@@ -1,7 +1,7 @@
-const Path = require('path');
-const {CleanWebpackPlugin} = require('clean-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const Path = require('path')
+const {CleanWebpackPlugin} = require('clean-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
     entry: {
@@ -19,9 +19,11 @@ module.exports = {
     },
     plugins: [
         new CleanWebpackPlugin(),
-        new CopyWebpackPlugin([
-            {from: Path.resolve(__dirname, '../public'), to: 'public'}
-        ]),
+        new CopyWebpackPlugin({
+            patterns: [
+                {from: Path.resolve(__dirname, '../public'), to: 'public'}
+            ]
+        }),
         new HtmlWebpackPlugin({
             template: Path.resolve(__dirname, '../src/index.html')
         })
@@ -52,4 +54,4 @@ module.exports = {
     node: {
         fs: 'empty'
     }
-};
+}
