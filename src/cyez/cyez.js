@@ -647,13 +647,18 @@ class Cyez {
     /**
      * 从文件读取 json 文件，并加载到视图中
      * @public
+     * @param callback {?Function} 可选，布局完成之后将调用此函数
      */
-    load() {
+    load(callback) {
         fileDialog({accept: 'application/json'})
             .then(files => {
                 let reader = new FileReader()
                 reader.onload = file => {
-                    this.cy.json(JSON.parse(file.target.result))
+                    let load = JSON.parse(file.target.result)
+                    this.cy.json(load)
+                    if (callback != null) {
+                        callback(load)
+                    }
                 }
                 reader.readAsText(files[0])
             })
