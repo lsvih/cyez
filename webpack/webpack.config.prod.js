@@ -49,9 +49,9 @@ module.exports = {
         ]
     },
     resolve: {
-        extensions: ['.js']
+        extensions: ['.js'],
+        fallback: {
+            fs: false
+        }
     },
-    node: {
-        fs: 'empty'
-    }
 };

@@ -31,6 +31,9 @@ module.exports = {
     resolve: {
         alias: {
             '~': Path.resolve(__dirname, '../src')
+        },
+        fallback: {
+            fs: false
         }
     },
     module: {
@@ -51,7 +54,4 @@ module.exports = {
             },
         ]
     },
-    node: {
-        fs: 'empty'
-    }
 }
