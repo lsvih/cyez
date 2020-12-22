@@ -429,22 +429,29 @@ class Cyez {
         if (this.freeze) {
             console.info('当前画布处于冻结状态')
         } else {
-            this.freeze = true // 防止重复布局，冻结画布
-            this.current_layout = this.cy.layout({
-                name: layout,
-                animate: true,
-                maxSimulationTime: 4000,
-                animationDuration: 1000,
-                animationEasing: 'ease-in-out',
-                stop: () => {
-                    this.freeze = false // 布局完成后解冻画布
-                    this.current_layout = null
-                    if (callback != null) {
-                        callback()
+            try {
+                this.freeze = true // 防止重复布局，冻结画布
+                this.current_layout = this.cy.layout({
+                    name: layout,
+                    animate: true,
+                    maxSimulationTime: 4000,
+                    animationDuration: 1000,
+                    animationEasing: 'ease-in-out',
+                    stop: () => {
+                        this.freeze = false // 布局完成后解冻画布
+                        this.current_layout = null
+                        if (callback != null) {
+                            callback()
+                        }
                     }
-                }
-            })
-            this.current_layout.run()
+                })
+                this.current_layout.run()
+            } catch (e) {
+                this.freeze = false
+                this.current_layout = null
+                console.warn(`进行 ${layout} 布局时发生错误`)
+                console.error(e)
+            }
         }
     }
 
@@ -473,25 +480,32 @@ class Cyez {
         if (this.freeze) {
             console.info('当前画布处于冻结状态')
         } else {
-            this.freeze = true
-            this.current_layout = nodes.makeLayout({
-                name: new_options.layout,
-                fit: false,
-                boundingBox: new_options.position,
-                animate: true,
-                maxSimulationTime: 4000,
-                animationDuration: 1000,
-                animationEasing: 'ease-in-out',
-                avoidOverlap: true,
-                stop: () => {
-                    this.freeze = false // 布局完成后解冻画布
-                    this.current_layout = null
-                    if (callback != null) {
-                        callback()
+            try {
+                this.freeze = true
+                this.current_layout = nodes.makeLayout({
+                    name: new_options.layout,
+                    fit: false,
+                    boundingBox: new_options.position,
+                    animate: true,
+                    maxSimulationTime: 4000,
+                    animationDuration: 1000,
+                    animationEasing: 'ease-in-out',
+                    avoidOverlap: true,
+                    stop: () => {
+                        this.freeze = false // 布局完成后解冻画布
+                        this.current_layout = null
+                        if (callback != null) {
+                            callback()
+                        }
                     }
-                }
-            })
-            this.current_layout.run()
+                })
+                this.current_layout.run()
+            } catch (e) {
+                this.freeze = false
+                this.current_layout = null
+                console.warn(`进行 ${layout} 布局时发生错误`)
+                console.error(e)
+            }
         }
     }
 
