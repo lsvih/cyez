@@ -7,9 +7,9 @@ import {saveAs} from 'file-saver'
 import fileDialog from 'file-dialog'
 import panzoom from 'cytoscape-panzoom'
 import b64toBlob from 'b64-to-blob'
-import {isEmpty, assign, merge, concat, pull} from 'lodash'
+import {assign, concat, isEmpty, merge} from 'lodash'
 
-import 'cytoscape-panzoom/cytoscape.js-panzoom.css';
+import 'cytoscape-panzoom/cytoscape.js-panzoom.css'
 
 class Cyez {
     /**
@@ -48,7 +48,7 @@ class Cyez {
         /**
          * 定义了多种点击事件
          * @interface
-         */;
+         */
         this.event = {}
         this.init()
         this.initEvent()
@@ -176,31 +176,31 @@ class Cyez {
         this.cy.on('doubleTap', e => {
             let target = e.target
             if (e.target === this.cy)// double click on background
-                return this.event.dbclickOnBackground()
+                return this.event.dbclickOnBackground(e)
             if (target.isNode())
-                return this.event.dbclickOnNode(target.data())
+                return this.event.dbclickOnNode(target.data(), e)
             if (target.isEdge())
-                return this.event.dbclickOnEdge(target.data())
+                return this.event.dbclickOnEdge(target.data(), e)
         })
 
         this.cy.on('tap', e => {
             let target = e.target
             if (e.target === this.cy)// click on background
-                return this.event.clickOnBackground()
+                return this.event.clickOnBackground(e)
             if (target.isNode())
-                return this.event.clickOnNode(target.data())
+                return this.event.clickOnNode(target.data(), e)
             if (target.isEdge())
-                return this.event.clickOnEdge(target.data())
+                return this.event.clickOnEdge(target.data(), e)
         })
 
         this.cy.on('cxttap', e => {
             let target = e.target
             if (e.target === this.cy)// click on background
-                return this.event.rightclickOnBackground()
+                return this.event.rightclickOnBackground(e)
             if (target.isNode())
-                return this.event.rightclickOnNode(target.data())
+                return this.event.rightclickOnNode(target.data(), e)
             if (target.isEdge())
-                return this.event.rightclickOnEdge(target.data())
+                return this.event.rightclickOnEdge(target.data(), e)
         })
     }
 
@@ -626,7 +626,7 @@ class Cyez {
      * @public
      */
     save() {
-        let blob = new Blob([JSON.stringify(this.cy.json())], {type: "text/plain;charset=utf-8"})
+        let blob = new Blob([JSON.stringify(this.cy.json())], {type: 'text/plain;charset=utf-8'})
         saveAs(blob, 'graph.json')
     }
 
@@ -651,11 +651,11 @@ class Cyez {
      * @see https://github.com/iVis-at-Bilkent/pathway-mapper/blob/master/public/src/js/FileOperationsManager.js#L33
      */
     saveAsJPEG() {
-        let graphData = this.cy.jpeg();
-        let b64data = graphData.substr(graphData.indexOf(",") + 1);
-        let imageData = b64toBlob(b64data, "image/jpeg");
-        let blob = new Blob([imageData]);
-        saveAs(blob, "graph.jpg");
+        let graphData = this.cy.jpeg()
+        let b64data = graphData.substr(graphData.indexOf(',') + 1)
+        let imageData = b64toBlob(b64data, 'image/jpeg')
+        let blob = new Blob([imageData])
+        saveAs(blob, 'graph.jpg')
     }
 
     /**
@@ -664,11 +664,11 @@ class Cyez {
      * @see https://github.com/iVis-at-Bilkent/pathway-mapper/blob/master/public/src/js/FileOperationsManager.js#L44
      */
     saveAsPNG() {
-        let graphData = this.cy.png();
-        let b64data = graphData.substr(graphData.indexOf(",") + 1);
-        let imageData = b64toBlob(b64data, "image/png");
-        let blob = new Blob([imageData]);
-        saveAs(blob, "graph.png");
+        let graphData = this.cy.png()
+        let b64data = graphData.substr(graphData.indexOf(',') + 1)
+        let imageData = b64toBlob(b64data, 'image/png')
+        let blob = new Blob([imageData])
+        saveAs(blob, 'graph.png')
     }
 
     /**
@@ -701,15 +701,15 @@ class Cyez {
      * @public
      */
     zoomToSelected(eles) {
-        let boundingBox = eles.boundingBox();
-        let diff_x = Math.abs(boundingBox.x1 - boundingBox.x2);
-        let diff_y = Math.abs(boundingBox.y1 - boundingBox.y2);
-        let padding;
+        let boundingBox = eles.boundingBox()
+        let diff_x = Math.abs(boundingBox.x1 - boundingBox.x2)
+        let diff_y = Math.abs(boundingBox.y1 - boundingBox.y2)
+        let padding
         if (diff_x >= 200 || diff_y >= 200) {
-            padding = 50;
+            padding = 50
         } else {
             padding = (this.cy.width() < this.cy.height()) ?
-                ((200 - diff_x) / 2 * this.cy.width() / 200) : ((200 - diff_y) / 2 * this.cy.height() / 200);
+                ((200 - diff_x) / 2 * this.cy.width() / 200) : ((200 - diff_y) / 2 * this.cy.height() / 200)
         }
 
         this.cy.animate({
@@ -719,8 +719,8 @@ class Cyez {
             }
         }, {
             duration: 1200
-        });
-        return eles;
+        })
+        return eles
     }
 
     /**
@@ -780,61 +780,70 @@ class Cyez {
              * 在节点上单击
              * @method
              * @param {string} node - 传出点击的节点
+             * @param {Event} e - 点击事件
              */
-            clickOnNode: node => {
+            clickOnNode: (node, e) => {
             },
             /**
              * 在连线上单击
              * @method
              * @param {string} edge - 传出点击的连线
+             * @param {Event} e - 点击事件
              */
-            clickOnEdge: edge => {
+            clickOnEdge: (edge, e) => {
             },
             /**
              * 在背景上单击
              * @method
+             * @param {Event} e - 点击事件
              */
-            clickOnBackground: () => {
+            clickOnBackground: e => {
             },
             /**
              * 在节点上双击
              * @method
              * @param {string} node - 传出点击的节点
+             * @param {Event} e - 点击事件
              */
-            dbclickOnNode: node => {
+            dbclickOnNode: (node, e) => {
             },
             /**
              * 在连线上双击
              * @method
              * @param {string} edge - 传出点击的连线
+             * @param {Event} e - 点击事件
              */
-            dbclickOnEdge: edge => {
+            dbclickOnEdge: (edge, e) => {
             },
             /**
              * 在背景上双击
              * @method
+             * @param {Event} e - 点击事件
              */
-            dbclickOnBackground: () => {
+            dbclickOnBackground: e => {
             },
             /**
              * 在节点上右击
              * @method
              * @param {string} node - 传出点击的节点
+             * @param {Event} e - 点击事件
              */
-            rightclickOnNode: node => {
+            rightclickOnNode: (node, e) => {
             },
             /**
              * 在连线上右击
              * @method
              * @param {string} edge - 传出点击的连线
+             * @param {Event} e - 点击事件
              */
-            rightclickOnEdge: edge => {
+            rightclickOnEdge: (edge, e) => {
             },
             /**
              * 在背景上右击
              * @method
+             * @param {Event} e - 点击事件
              */
-            rightclickOnBackground: () => {
+            rightclickOnBackground: e => {
             },
         }
     }
