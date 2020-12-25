@@ -503,7 +503,7 @@ class Cyez {
             } catch (e) {
                 this.freeze = false
                 this.current_layout = null
-                console.warn(`进行 ${layout} 布局时发生错误`)
+                console.warn(`进行 ${new_options.layout} 布局时发生错误`)
                 console.error(e)
             }
         }
