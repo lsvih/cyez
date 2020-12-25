@@ -16,17 +16,39 @@ class Cyez {
      * 传入交互组件的容器，以及样式，构建 cyez 实例
      * @param container {Node} 交互组件所在的容器，用 document.getElementById 等选择器得到
      * @param style {Object} 交互组件的样式模板
+     * @param options {?Object} cytoscape 的设置
      */
-    constructor(container, style) {
+    constructor(container, style, options) {
         console.log('Bind cytoscape to DOM ', container)
+        let default_cy_options = {
+            minZoom: 1e-50,
+            maxZoom: 1e50,
+            zoomingEnabled: true,
+            userZoomingEnabled: true,
+            panningEnabled: true,
+            userPanningEnabled: true,
+            boxSelectionEnabled: true,
+            selectionType: 'single',
+            touchTapThreshold: 8,
+            desktopTapThreshold: 4,
+            autolock: false,
+            autoungrabify: false,
+            autounselectify: false,
+            // rendering options:
+            headless: false,
+            styleEnabled: true,
+            hideEdgesOnViewport: true,
+            textureOnViewport: true,
+            motionBlur: true,
+            motionBlurOpacity: 0.2,
+            wheelSensitivity: .6,
+            pixelRatio: 1
+        }
+        let cy_options = merge({}, default_cy_options, options)
         this.cy = cytoscape({
             container,
             style,
-            motionBlur: true,
-            hideEdgesOnViewport: true,
-            hideLabelsOnViewport: true,
-            wheelSensitivity: .6,
-            pixelRatio: 1
+            ...cy_options
         })
         console.log('Init cyez', this.cy)
         this.layout = new Layout()

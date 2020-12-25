@@ -2,7 +2,7 @@ import Cyez from '../cyez/cyez'
 import '../styles/index.scss'
 
 
-let cyez = new Cyez(document.getElementById('cy'),{})
+let cyez = new Cyez(document.getElementById('cy'),{}, {})
 cyez.InitNavigator('.cytoscape-navigator-overlay')
 window.cyez = cyez
 // 增加节点与连边示例
