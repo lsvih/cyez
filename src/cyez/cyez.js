@@ -215,11 +215,12 @@ class Cyez {
      * @public
      */
     addNode(id, name, type, attr) {
-        return this.cy.add({
+        let added_node = this.cy.add({
             group: 'nodes',
             data: {id, name, type, attr},
             position: this.getCenter()
         })
+        return this.getNodeById(added_node.id())
     }
 
     /**
