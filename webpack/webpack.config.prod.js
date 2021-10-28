@@ -1,8 +1,7 @@
-const Path = require('path');
-const Webpack = require('webpack');
+const Path = require('path')
+const Webpack = require('webpack')
 // const merge = require('webpack-merge');
-const {CleanWebpackPlugin} = require('clean-webpack-plugin');
-// const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 // const common = require('./webpack.common.js');
 
 module.exports = {
@@ -19,39 +18,34 @@ module.exports = {
     },
     plugins: [
         new CleanWebpackPlugin(),
-        new Webpack.optimize.LimitChunkCountPlugin({maxChunks: 1})
+        new Webpack.optimize.LimitChunkCountPlugin({maxChunks: 1}),
         //   new Webpack.DefinePlugin({
         //     'process.env.NODE_ENV': JSON.stringify('production')
         //   }),
         //   new Webpack.optimize.ModuleConcatenationPlugin(),
-        //   new MiniCssExtractPlugin({
-        //     filename: 'bundle.css'
-        //   })
     ],
     module: {
         rules: [
             {
                 test: /\.(js)$/,
                 exclude: /node_modules/,
-                use: 'babel-loader'
+                use: 'babel-loader',
             },
             {
                 test: /\.s?css$/i,
-                use: ['style-loader', 'css-loader?sourceMap=true']
-            }
-            // {
-            //   test: /\.s?css/i,
-            //   use : [
-            //     MiniCssExtractPlugin.loader,
-            //     'css-loader',
-            //   ]
-            // }
-        ]
+                use: ['style-loader',
+                    {
+                        loader: 'css-loader',
+                        options: {importLoaders: 2, sourceMap: true},
+                    },
+                ],
+            },
+        ],
     },
     resolve: {
         extensions: ['.js'],
         fallback: {
-            fs: false
-        }
+            fs: false,
+        },
     },
-};
+}

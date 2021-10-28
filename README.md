@@ -20,7 +20,7 @@ export default {
 ### Install Dependency
 
 ```bash
-npm install
+npm install -f
 ```
 
 

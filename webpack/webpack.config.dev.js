@@ -10,7 +10,6 @@ module.exports = merge(common, {
         chunkFilename: 'js/[name].chunk.js'
     },
     devServer: {
-        inline: true
     },
     plugins: [
         new Webpack.DefinePlugin({
@@ -26,7 +25,12 @@ module.exports = merge(common, {
             },
             {
                 test: /\.s?css$/i,
-                use: ['style-loader', 'css-loader?sourceMap=true']
+                use: ['style-loader',
+                    {
+                        loader: 'css-loader',
+                        options: {importLoaders: 2, sourceMap: true},
+                    },
+                ],
             }
         ]
     }
